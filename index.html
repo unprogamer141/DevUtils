@@ -8,24 +8,50 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet" />
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        /* --- CSS Reset & Variables --- */
+        :root {
+            --bg-primary: #0b1120;
+            --bg-card: #111b2e;
+            --bg-input: #0a111f;
+            --border-color: #1e293b;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --shadow: 0 8px 24px rgba(0,0,0,0.4);
+            --radius: 12px;
         }
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-input: #f1f5f9;
+            --border-color: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #0b1120;
-            color: #e2e8f0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             padding: 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            transition: background 0.2s, color 0.2s;
         }
         .container {
             max-width: 1000px;
             width: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
         }
         h1 {
             font-size: 2.2rem;
@@ -34,13 +60,23 @@
             background: linear-gradient(135deg, #94a3b8, #f1f5f9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
         }
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .theme-toggle:hover { opacity: 0.8; }
         .sub {
-            color: #64748b;
+            color: var(--text-secondary);
             margin-bottom: 28px;
             font-size: 0.95rem;
-            border-left: 3px solid #3b82f6;
+            border-left: 3px solid var(--accent);
             padding-left: 16px;
         }
         .tabs {
@@ -48,13 +84,13 @@
             flex-wrap: wrap;
             gap: 8px 4px;
             margin-bottom: 28px;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 12px;
         }
         .tab-btn {
             background: transparent;
             border: none;
-            color: #94a3b8;
+            color: var(--text-secondary);
             padding: 8px 16px;
             border-radius: 30px;
             font-family: 'Inter', sans-serif;
@@ -63,37 +99,27 @@
             cursor: pointer;
             transition: all 0.15s;
         }
-        .tab-btn:hover {
-            background: #1e293b;
-            color: #f1f5f9;
-        }
-        .tab-btn.active {
-            background: #3b82f6;
-            color: #fff;
-        }
+        .tab-btn:hover { background: var(--border-color); color: var(--text-primary); }
+        .tab-btn.active { background: var(--accent); color: #fff; }
         .tool-panel {
             display: none;
             animation: fade 0.2s ease;
         }
-        .tool-panel.active {
-            display: block;
-        }
-        @keyframes fade {
-            0% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
+        .tool-panel.active { display: block; }
+        @keyframes fade { 0% { opacity: 0.4; } 100% { opacity: 1; } }
         .card {
-            background: #111b2e;
-            border-radius: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
             padding: 24px;
-            border: 1px solid #1e293b;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: background 0.2s, border 0.2s;
         }
         label {
             display: block;
             font-size: 0.85rem;
             font-weight: 500;
-            color: #94a3b8;
+            color: var(--text-secondary);
             margin-bottom: 8px;
             margin-top: 16px;
         }
@@ -101,10 +127,10 @@
         textarea, input[type="text"], input[type="number"], input[type="color"] {
             width: 100%;
             padding: 12px 14px;
-            background: #0a111f;
-            border: 1px solid #1e293b;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            color: #e2e8f0;
+            color: var(--text-primary);
             font-family: 'Inter', monospace;
             font-size: 0.9rem;
             outline: none;
@@ -112,7 +138,7 @@
             resize: vertical;
         }
         textarea:focus, input:focus {
-            border-color: #3b82f6;
+            border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
         textarea { min-height: 100px; }
@@ -123,7 +149,7 @@
             margin: 14px 0 6px;
         }
         .btn {
-            background: #3b82f6;
+            background: var(--accent);
             border: none;
             color: #fff;
             font-weight: 500;
@@ -134,18 +160,18 @@
             font-size: 0.85rem;
             transition: background 0.15s, transform 0.1s;
         }
-        .btn:hover { background: #2563eb; }
+        .btn:hover { background: var(--accent-hover); }
         .btn:active { transform: scale(0.97); }
         .btn-secondary {
-            background: #1e293b;
-            color: #cbd5e1;
+            background: var(--border-color);
+            color: var(--text-primary);
         }
-        .btn-secondary:hover { background: #334155; }
+        .btn-secondary:hover { opacity: 0.8; }
         .output-box {
-            background: #0a111f;
+            background: var(--bg-input);
             padding: 14px;
             border-radius: 10px;
-            border: 1px solid #1e293b;
+            border: 1px solid var(--border-color);
             margin-top: 14px;
             white-space: pre-wrap;
             word-break: break-all;
@@ -153,21 +179,36 @@
             font-size: 0.9rem;
             max-height: 300px;
             overflow: auto;
+            position: relative;
         }
+        .copy-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .copy-btn:hover { background: var(--accent); color: #fff; }
         .flex-row {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             align-items: flex-end;
         }
-        .flex-row > * { flex: 1; min-width: 160px; }
+        .flex-row > * { flex: 1; min-width: 140px; }
         .badge {
             display: inline-block;
-            background: #1e293b;
+            background: var(--border-color);
             padding: 2px 12px;
             border-radius: 30px;
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: var(--text-secondary);
         }
         .qr-box {
             display: flex;
@@ -180,22 +221,19 @@
             width: 40px;
             height: 40px;
             border-radius: 10px;
-            border: 1px solid #1e293b;
+            border: 1px solid var(--border-color);
             vertical-align: middle;
             margin-left: 12px;
         }
-        .copy-btn {
-            background: transparent;
-            border: 1px solid #334155;
-            color: #94a3b8;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.15s;
-            margin-left: 12px;
+        .counter {
+            background: var(--bg-input);
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
         }
-        .copy-btn:hover { background: #1e293b; color: #f1f5f9; }
         @media (max-width: 600px) {
             h1 { font-size: 1.7rem; }
             .tabs { gap: 4px; }
@@ -205,19 +243,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>🧰 DevUtils</h1>
-        <div class="sub">Single‑page offline toolkit for everyday development</div>
+        <div class="header">
+            <h1>🧰 DevUtils</h1>
+            <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+        </div>
+        <div class="sub">Single‑page offline toolkit – now with more tools</div>
 
         <!-- Tabs -->
         <div class="tabs" id="tabContainer">
             <button class="tab-btn active" data-tab="json">JSON</button>
             <button class="tab-btn" data-tab="base64">Base64</button>
             <button class="tab-btn" data-tab="uuid">UUID</button>
+            <button class="tab-btn" data-tab="password">Password</button>
             <button class="tab-btn" data-tab="timestamp">Timestamp</button>
             <button class="tab-btn" data-tab="regex">Regex</button>
             <button class="tab-btn" data-tab="diff">Diff</button>
             <button class="tab-btn" data-tab="color">Color</button>
             <button class="tab-btn" data-tab="qr">QR</button>
+            <button class="tab-btn" data-tab="url">URL</button>
+            <button class="tab-btn" data-tab="counter">Counter</button>
         </div>
 
         <!-- Panel: JSON -->
@@ -230,7 +274,7 @@
                     <button class="btn btn-secondary" id="jsonValidate">Validate</button>
                     <button class="btn btn-secondary" id="jsonMinify">Minify</button>
                 </div>
-                <div id="jsonOutput" class="output-box"></div>
+                <div id="jsonOutput" class="output-box"><button class="copy-btn" data-target="jsonOutput">Copy</button></div>
             </div>
         </div>
 
@@ -243,7 +287,7 @@
                     <button class="btn" id="b64Encode">Encode</button>
                     <button class="btn btn-secondary" id="b64Decode">Decode</button>
                 </div>
-                <div id="b64Output" class="output-box"></div>
+                <div id="b64Output" class="output-box"><button class="copy-btn" data-target="b64Output">Copy</button></div>
             </div>
         </div>
 
@@ -261,13 +305,31 @@
             </div>
         </div>
 
+        <!-- Panel: Password Generator -->
+        <div class="tool-panel" id="panel-password">
+            <div class="card">
+                <label>Password Generator</label>
+                <div class="flex-row">
+                    <input type="number" id="passLength" value="16" min="4" max="64" style="flex:1;" />
+                    <label style="flex:0; margin:0; display:flex; align-items:center; gap:6px;">
+                        <input type="checkbox" id="passNumbers" checked /> Numbers
+                    </label>
+                    <label style="flex:0; margin:0; display:flex; align-items:center; gap:6px;">
+                        <input type="checkbox" id="passSymbols" checked /> Symbols
+                    </label>
+                </div>
+                <button class="btn" id="passGenerate" style="margin:12px 0;">Generate</button>
+                <div id="passOutput" class="output-box"><button class="copy-btn" data-target="passOutput">Copy</button></div>
+            </div>
+        </div>
+
         <!-- Panel: Timestamp -->
         <div class="tool-panel" id="panel-timestamp">
             <div class="card">
                 <label>Unix Timestamp (seconds)</label>
                 <input type="number" id="tsInput" placeholder="e.g. 1690000000" />
                 <button class="btn" id="tsConvert" style="margin:12px 0;">Convert to Date</button>
-                <div id="tsOutput" class="output-box"></div>
+                <div id="tsOutput" class="output-box"><button class="copy-btn" data-target="tsOutput">Copy</button></div>
                 <button class="btn btn-secondary" id="tsNow">Current Timestamp</button>
             </div>
         </div>
@@ -282,7 +344,7 @@
                 <label>Flags (g, i, m)</label>
                 <input type="text" id="regexFlags" value="gi" />
                 <button class="btn" id="regexTest" style="margin:12px 0;">Test</button>
-                <div id="regexOutput" class="output-box">Matches will appear here.</div>
+                <div id="regexOutput" class="output-box"><button class="copy-btn" data-target="regexOutput">Copy</button></div>
             </div>
         </div>
 
@@ -294,7 +356,7 @@
                 <label>Modified text</label>
                 <textarea id="diffB">Hello world!</textarea>
                 <button class="btn" id="diffCompare" style="margin:12px 0;">Compare</button>
-                <div id="diffOutput" class="output-box">Differences will appear here.</div>
+                <div id="diffOutput" class="output-box"><button class="copy-btn" data-target="diffOutput">Copy</button></div>
             </div>
         </div>
 
@@ -323,11 +385,39 @@
                 <div id="qrResult" class="qr-box"></div>
             </div>
         </div>
+
+        <!-- Panel: URL Encoder/Decoder -->
+        <div class="tool-panel" id="panel-url">
+            <div class="card">
+                <label>Enter text or URL</label>
+                <textarea id="urlInput">https://example.com/hello world?q=test</textarea>
+                <div class="row">
+                    <button class="btn" id="urlEncode">Encode</button>
+                    <button class="btn btn-secondary" id="urlDecode">Decode</button>
+                </div>
+                <div id="urlOutput" class="output-box"><button class="copy-btn" data-target="urlOutput">Copy</button></div>
+            </div>
+        </div>
+
+        <!-- Panel: Character / Word Counter -->
+        <div class="tool-panel" id="panel-counter">
+            <div class="card">
+                <label>Paste or type text</label>
+                <textarea id="counterInput" placeholder="Write something..."></textarea>
+                <div id="counterStats" class="counter">Characters: 0 | Words: 0 | Lines: 0</div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        // ---- TABS ----
+        // ---- Theme toggle ----
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-theme');
+            this.textContent = document.body.classList.contains('light-theme') ? '☀️ Light' : '🌙 Dark';
+        });
+
+        // ---- Tabs ----
         const tabs = document.querySelectorAll('.tab-btn');
         const panels = document.querySelectorAll('.tool-panel');
         tabs.forEach(tab => {
@@ -339,19 +429,39 @@
             });
         });
 
+        // ---- Generic copy function ----
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetId = this.dataset.target;
+                const outputEl = document.getElementById(targetId);
+                let text = outputEl.textContent;
+                // Remove any inner copy button text (if present)
+                const copyBtnIn = outputEl.querySelector('.copy-btn');
+                if (copyBtnIn) text = text.replace(copyBtnIn.textContent, '').trim();
+                if (text) {
+                    navigator.clipboard?.writeText(text).then(() => {
+                        const orig = this.textContent;
+                        this.textContent = '✅ Copied!';
+                        setTimeout(() => this.textContent = orig, 1500);
+                    }).catch(() => alert('Copy failed.'));
+                }
+            });
+        });
+
         // ---- JSON ----
         document.getElementById('jsonFormat').addEventListener('click', () => {
-            try {
-                const obj = JSON.parse(document.getElementById('jsonInput').value);
-                document.getElementById('jsonOutput').textContent = JSON.stringify(obj, null, 2);
-            } catch(e) { document.getElementById('jsonOutput').textContent = '❌ Invalid JSON: ' + e.message; }
+            try { const obj = JSON.parse(document.getElementById('jsonInput').value);
+                document.getElementById('jsonOutput').textContent = JSON.stringify(obj, null, 2); }
+            catch(e) { document.getElementById('jsonOutput').textContent = '❌ Invalid JSON: ' + e.message; }
         });
         document.getElementById('jsonValidate').addEventListener('click', () => {
-            try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonOutput').textContent = '✅ Valid JSON'; }
+            try { JSON.parse(document.getElementById('jsonInput').value);
+                document.getElementById('jsonOutput').textContent = '✅ Valid JSON'; }
             catch(e) { document.getElementById('jsonOutput').textContent = '❌ ' + e.message; }
         });
         document.getElementById('jsonMinify').addEventListener('click', () => {
-            try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonOutput').textContent = JSON.stringify(obj); }
+            try { const obj = JSON.parse(document.getElementById('jsonInput').value);
+                document.getElementById('jsonOutput').textContent = JSON.stringify(obj); }
             catch(e) { document.getElementById('jsonOutput').textContent = '❌ Invalid JSON'; }
         });
 
@@ -361,7 +471,8 @@
             document.getElementById('b64Output').textContent = btoa(unescape(encodeURIComponent(val)));
         });
         document.getElementById('b64Decode').addEventListener('click', () => {
-            try { const val = document.getElementById('b64Input').value; document.getElementById('b64Output').textContent = decodeURIComponent(escape(atob(val))); }
+            try { const val = document.getElementById('b64Input').value;
+                document.getElementById('b64Output').textContent = decodeURIComponent(escape(atob(val))); }
             catch(e) { document.getElementById('b64Output').textContent = '❌ Invalid Base64'; }
         });
 
@@ -373,6 +484,26 @@
             const val = document.getElementById('uuidOutput').value;
             if (val) { navigator.clipboard?.writeText(val); alert('Copied!'); }
         });
+
+        // ---- Password Generator ----
+        function generatePassword(length, useNumbers, useSymbols) {
+            let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            if (useNumbers) chars += '0123456789';
+            if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }
+        document.getElementById('passGenerate').addEventListener('click', () => {
+            const len = parseInt(document.getElementById('passLength').value) || 16;
+            const nums = document.getElementById('passNumbers').checked;
+            const syms = document.getElementById('passSymbols').checked;
+            document.getElementById('passOutput').textContent = generatePassword(len, nums, syms);
+        });
+        // Generate on load
+        document.getElementById('passGenerate').click();
 
         // ---- Timestamp ----
         document.getElementById('tsConvert').addEventListener('click', () => {
@@ -399,7 +530,7 @@
             } catch(e) { document.getElementById('regexOutput').textContent = '❌ ' + e.message; }
         });
 
-        // ---- Diff (simple character diff) ----
+        // ---- Diff ----
         document.getElementById('diffCompare').addEventListener('click', () => {
             const a = document.getElementById('diffA').value;
             const b = document.getElementById('diffB').value;
@@ -422,12 +553,10 @@
             const hex = this.value;
             document.getElementById('colorPreview').style.background = hex;
             document.getElementById('colorHex').textContent = hex;
-            // RGB
             const r = parseInt(hex.slice(1,3), 16);
             const g = parseInt(hex.slice(3,5), 16);
             const b = parseInt(hex.slice(5,7), 16);
             document.getElementById('colorRgb').value = `rgb(${r}, ${g}, ${b})`;
-            // HSL (approx)
             const max = Math.max(r,g,b)/255, min = Math.min(r,g,b)/255;
             let h, s, l = (max+min)/2;
             if (max === min) { h = s = 0; }
@@ -444,6 +573,7 @@
             }
             document.getElementById('colorHsl').value = `hsl(${Math.round(h)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
         });
+        document.getElementById('colorPicker').dispatchEvent(new Event('input'));
 
         // ---- QR ----
         let qrCode = null;
@@ -455,14 +585,32 @@
             if (qrCode) { qrCode.clear(); qrCode = null; }
             qrCode = new QRCode(container, { text: text, width: 200, height: 200, colorDark: '#ffffff', colorLight: '#0b1120' });
         });
-
-        // Default: generate QR for "https://github.com"
         document.getElementById('qrGenerate').click();
-        // Trigger default color preview
-        document.getElementById('colorPicker').dispatchEvent(new Event('input'));
 
-        // ---- JSON auto-format on paste? No, manual.
-        console.log('DevUtils loaded ✅');
+        // ---- URL Encoder/Decoder ----
+        document.getElementById('urlEncode').addEventListener('click', () => {
+            const val = document.getElementById('urlInput').value;
+            try { document.getElementById('urlOutput').textContent = encodeURIComponent(val); }
+            catch(e) { document.getElementById('urlOutput').textContent = '❌ Error encoding'; }
+        });
+        document.getElementById('urlDecode').addEventListener('click', () => {
+            const val = document.getElementById('urlInput').value;
+            try { document.getElementById('urlOutput').textContent = decodeURIComponent(val); }
+            catch(e) { document.getElementById('urlOutput').textContent = '❌ Invalid URL encoding'; }
+        });
+
+        // ---- Counter ----
+        document.getElementById('counterInput').addEventListener('input', function() {
+            const text = this.value;
+            const chars = text.length;
+            const words = text ? text.trim().split(/\s+/).length : 0;
+            const lines = text ? text.split('\n').length : 0;
+            document.getElementById('counterStats').textContent = `Characters: ${chars} | Words: ${words} | Lines: ${lines}`;
+        });
+        // Initial update
+        document.getElementById('counterInput').dispatchEvent(new Event('input'));
+
+        console.log('DevUtils v2 loaded ✅');
     </script>
 </body>
 </html>
