@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevUtils – Offline Developer Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b1120;
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #94a3b8, #f1f5f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .sub {
+            color: #64748b;
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+            border-left: 3px solid #3b82f6;
+            padding-left: 16px;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 4px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 12px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .tab-btn:hover {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        .tab-btn.active {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .tool-panel {
+            display: none;
+            animation: fade 0.2s ease;
+        }
+        .tool-panel.active {
+            display: block;
+        }
+        @keyframes fade {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        .card {
+            background: #111b2e;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+        label:first-of-type { margin-top: 0; }
+        textarea, input[type="text"], input[type="number"], input[type="color"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: #0a111f;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            color: #e2e8f0;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.15s;
+            resize: vertical;
+        }
+        textarea:focus, input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        textarea { min-height: 100px; }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 14px 0 6px;
+        }
+        .btn {
+            background: #3b82f6;
+            border: none;
+            color: #fff;
+            font-weight: 500;
+            padding: 10px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .btn:hover { background: #2563eb; }
+        .btn:active { transform: scale(0.97); }
+        .btn-secondary {
+            background: #1e293b;
+            color: #cbd5e1;
+        }
+        .btn-secondary:hover { background: #334155; }
+        .output-box {
+            background: #0a111f;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            margin-top: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow: auto;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+        }
+        .flex-row > * { flex: 1; min-width: 160px; }
+        .badge {
+            display: inline-block;
+            background: #1e293b;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        .qr-box {
+            display: flex;
+            justify-content: center;
+            padding: 16px 0;
+        }
+        #qrResult img { border-radius: 12px; }
+        .color-preview {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            vertical-align: middle;
+            margin-left: 12px;
+        }
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-left: 12px;
+        }
+        .copy-btn:hover { background: #1e293b; color: #f1f5f9; }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            .tabs { gap: 4px; }
+            .tab-btn { font-size: 0.75rem; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧰 DevUtils</h1>
+        <div class="sub">Single‑page offline toolkit for everyday development</div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="tabContainer">
+            <button class="tab-btn active" data-tab="json">JSON</button>
+            <button class="tab-btn" data-tab="base64">Base64</button>
+            <button class="tab-btn" data-tab="uuid">UUID</button>
+            <button class="tab-btn" data-tab="timestamp">Timestamp</button>
+            <button class="tab-btn" data-tab="regex">Regex</button>
+            <button class="tab-btn" data-tab="diff">Diff</button>
+            <button class="tab-btn" data-tab="color">Color</button>
+            <button class="tab-btn" data-tab="qr">QR</button>
+        </div>
+
+        <!-- Panel: JSON -->
+        <div class="tool-panel active" id="panel-json">
+            <div class="card">
+                <label>Paste JSON</label>
+                <textarea id="jsonInput" placeholder='{"hello": "world"}'></textarea>
+                <div class="row">
+                    <button class="btn" id="jsonFormat">Format</button>
+                    <button class="btn btn-secondary" id="jsonValidate">Validate</button>
+                    <button class="btn btn-secondary" id="jsonMinify">Minify</button>
+                </div>
+                <div id="jsonOutput" class="output-box"></div>
+            </div>
+        </div>
+
+        <!-- Panel: Base64 -->
+        <div class="tool-panel" id="panel-base64">
+            <div class="card">
+                <label>Enter text</label>
+                <textarea id="b64Input">Hello, DevUtils!</textarea>
+                <div class="row">
+                    <button class="btn" id="b64Encode">Encode</button>
+                    <button class="btn btn-secondary" id="b64Decode">Decode</button>
+                </div>
+                <div id="b64Output" class="output-box"></div>
+            </div>
+        </div>
+
+        <!-- Panel: UUID -->
+        <div class="tool-panel" id="panel-uuid">
+            <div class="card">
+                <label>UUID v4 Generator</label>
+                <div class="flex-row">
+                    <input type="text" id="uuidOutput" readonly placeholder="Click generate" style="flex:3;" />
+                    <button class="btn" id="uuidGen" style="flex:1;">Generate</button>
+                </div>
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn btn-secondary" id="uuidCopy">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel: Timestamp -->
+        <div class="tool-panel" id="panel-timestamp">
+            <div class="card">
+                <label>Unix Timestamp (seconds)</label>
+                <input type="number" id="tsInput" placeholder="e.g. 1690000000" />
+                <button class="btn" id="tsConvert" style="margin:12px 0;">Convert to Date</button>
+                <div id="tsOutput" class="output-box"></div>
+                <button class="btn btn-secondary" id="tsNow">Current Timestamp</button>
+            </div>
+        </div>
+
+        <!-- Panel: Regex -->
+        <div class="tool-panel" id="panel-regex">
+            <div class="card">
+                <label>Text</label>
+                <textarea id="regexText">Hello world, hello universe.</textarea>
+                <label>Regex Pattern</label>
+                <input type="text" id="regexPattern" value="hello" />
+                <label>Flags (g, i, m)</label>
+                <input type="text" id="regexFlags" value="gi" />
+                <button class="btn" id="regexTest" style="margin:12px 0;">Test</button>
+                <div id="regexOutput" class="output-box">Matches will appear here.</div>
+            </div>
+        </div>
+
+        <!-- Panel: Diff -->
+        <div class="tool-panel" id="panel-diff">
+            <div class="card">
+                <label>Original text</label>
+                <textarea id="diffA">Hello world</textarea>
+                <label>Modified text</label>
+                <textarea id="diffB">Hello world!</textarea>
+                <button class="btn" id="diffCompare" style="margin:12px 0;">Compare</button>
+                <div id="diffOutput" class="output-box">Differences will appear here.</div>
+            </div>
+        </div>
+
+        <!-- Panel: Color -->
+        <div class="tool-panel" id="panel-color">
+            <div class="card">
+                <label>Pick a color</label>
+                <input type="color" id="colorPicker" value="#3b82f6" />
+                <div style="margin-top:16px;">
+                    <span class="color-preview" id="colorPreview" style="background:#3b82f6;"></span>
+                    <span id="colorHex">#3b82f6</span>
+                </div>
+                <label>RGB</label>
+                <input type="text" id="colorRgb" readonly value="rgb(59, 130, 246)" />
+                <label>HSL</label>
+                <input type="text" id="colorHsl" readonly value="hsl(217, 91%, 60%)" />
+            </div>
+        </div>
+
+        <!-- Panel: QR -->
+        <div class="tool-panel" id="panel-qr">
+            <div class="card">
+                <label>Text or URL</label>
+                <input type="text" id="qrInput" value="https://github.com" />
+                <button class="btn" id="qrGenerate" style="margin:12px 0;">Generate QR</button>
+                <div id="qrResult" class="qr-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        // ---- TABS ----
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.tool-panel');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                panels.forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ---- JSON ----
+        document.getElementById('jsonFormat').addEventListener('click', () => {
+            try {
+                const obj = JSON.parse(document.getElementById('jsonInput').value);
+                document.getElementById('jsonOutput').textContent = JSON.stringify(obj, null, 2);
+            } catch(e) { document.getElementById('jsonOutput').textContent = '❌ Invalid JSON: ' + e.message; }
+        });
+        document.getElementById('jsonValidate').addEventListener('click', () => {
+            try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonOutput').textContent = '✅ Valid JSON'; }
+            catch(e) { document.getElementById('jsonOutput').textContent = '❌ ' + e.message; }
+        });
+        document.getElementById('jsonMinify').addEventListener('click', () => {
+            try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonOutput').textContent = JSON.stringify(obj); }
+            catch(e) { document.getElementById('jsonOutput').textContent = '❌ Invalid JSON'; }
+        });
+
+        // ---- Base64 ----
+        document.getElementById('b64Encode').addEventListener('click', () => {
+            const val = document.getElementById('b64Input').value;
+            document.getElementById('b64Output').textContent = btoa(unescape(encodeURIComponent(val)));
+        });
+        document.getElementById('b64Decode').addEventListener('click', () => {
+            try { const val = document.getElementById('b64Input').value; document.getElementById('b64Output').textContent = decodeURIComponent(escape(atob(val))); }
+            catch(e) { document.getElementById('b64Output').textContent = '❌ Invalid Base64'; }
+        });
+
+        // ---- UUID ----
+        document.getElementById('uuidGen').addEventListener('click', () => {
+            document.getElementById('uuidOutput').value = crypto.randomUUID();
+        });
+        document.getElementById('uuidCopy').addEventListener('click', () => {
+            const val = document.getElementById('uuidOutput').value;
+            if (val) { navigator.clipboard?.writeText(val); alert('Copied!'); }
+        });
+
+        // ---- Timestamp ----
+        document.getElementById('tsConvert').addEventListener('click', () => {
+            const val = parseInt(document.getElementById('tsInput').value);
+            if (!val) { document.getElementById('tsOutput').textContent = '❌ Enter a valid number.'; return; }
+            const d = new Date(val * 1000);
+            document.getElementById('tsOutput').textContent = d.toString();
+        });
+        document.getElementById('tsNow').addEventListener('click', () => {
+            document.getElementById('tsInput').value = Math.floor(Date.now() / 1000);
+            document.getElementById('tsConvert').click();
+        });
+
+        // ---- Regex ----
+        document.getElementById('regexTest').addEventListener('click', () => {
+            const text = document.getElementById('regexText').value;
+            const pattern = document.getElementById('regexPattern').value;
+            const flags = document.getElementById('regexFlags').value || '';
+            try {
+                const re = new RegExp(pattern, flags);
+                const matches = text.match(re);
+                if (matches) document.getElementById('regexOutput').textContent = matches.map((m,i) => `[${i}] ${m}`).join('\n');
+                else document.getElementById('regexOutput').textContent = 'No matches found.';
+            } catch(e) { document.getElementById('regexOutput').textContent = '❌ ' + e.message; }
+        });
+
+        // ---- Diff (simple character diff) ----
+        document.getElementById('diffCompare').addEventListener('click', () => {
+            const a = document.getElementById('diffA').value;
+            const b = document.getElementById('diffB').value;
+            let out = '';
+            const maxLen = Math.max(a.length, b.length);
+            let changes = 0;
+            for (let i=0; i<maxLen; i++) {
+                if (a[i] !== b[i]) {
+                    changes++;
+                    out += `❌ Position ${i}: "${a[i]||'undefined'}" → "${b[i]||'undefined'}"\n`;
+                }
+            }
+            if (changes === 0) out = '✅ Texts are identical.';
+            else out = `🔁 ${changes} differences found:\n` + out;
+            document.getElementById('diffOutput').textContent = out;
+        });
+
+        // ---- Color ----
+        document.getElementById('colorPicker').addEventListener('input', function() {
+            const hex = this.value;
+            document.getElementById('colorPreview').style.background = hex;
+            document.getElementById('colorHex').textContent = hex;
+            // RGB
+            const r = parseInt(hex.slice(1,3), 16);
+            const g = parseInt(hex.slice(3,5), 16);
+            const b = parseInt(hex.slice(5,7), 16);
+            document.getElementById('colorRgb').value = `rgb(${r}, ${g}, ${b})`;
+            // HSL (approx)
+            const max = Math.max(r,g,b)/255, min = Math.min(r,g,b)/255;
+            let h, s, l = (max+min)/2;
+            if (max === min) { h = s = 0; }
+            else {
+                const d = max-min;
+                s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+                switch(max) {
+                    case r/255: h = ((g-b)/255)/d; break;
+                    case g/255: h = 2 + ((b-r)/255)/d; break;
+                    case b/255: h = 4 + ((r-g)/255)/d; break;
+                }
+                h *= 60;
+                if (h < 0) h += 360;
+            }
+            document.getElementById('colorHsl').value = `hsl(${Math.round(h)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+        });
+
+        // ---- QR ----
+        let qrCode = null;
+        document.getElementById('qrGenerate').addEventListener('click', () => {
+            const text = document.getElementById('qrInput').value;
+            if (!text) { alert('Enter text or URL.'); return; }
+            const container = document.getElementById('qrResult');
+            container.innerHTML = '';
+            if (qrCode) { qrCode.clear(); qrCode = null; }
+            qrCode = new QRCode(container, { text: text, width: 200, height: 200, colorDark: '#ffffff', colorLight: '#0b1120' });
+        });
+
+        // Default: generate QR for "https://github.com"
+        document.getElementById('qrGenerate').click();
+        // Trigger default color preview
+        document.getElementById('colorPicker').dispatchEvent(new Event('input'));
+
+        // ---- JSON auto-format on paste? No, manual.
+        console.log('DevUtils loaded ✅');
+    </script>
+</body>
+</html>
