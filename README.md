@@ -4,6 +4,7 @@
 
 [![Live Demo](https://img.shields.io/badge/demo-live-3b82f6?style=for-the-badge)](https://unprogamer141.github.io/DevUtils/)
 [![Stars](https://img.shields.io/github/stars/unprogamer141/DevUtils?style=social)](https://github.com/unprogamer141/DevUtils)
+[![Dev.to Article](https://img.shields.io/badge/read%20the%20article-Dev.to-0a0a0a?style=for-the-badge)](https://dev.to/unpro_gamer_141/i-made-a-100-offline-dev-toolkit-in-one-html-file-no-dependencies-no-ads-2h3h)
 
 ---
 
